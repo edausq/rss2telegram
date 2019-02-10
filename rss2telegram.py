@@ -8,10 +8,14 @@ import telegram
 
 TELEGRAM_BOT = telegram.Bot(token=os.environ['TELEGRAM_TOKEN'])
 DYNAMODB = boto3.resource('dynamodb', region_name=os.environ['AWS_DYNAMODB_REGION'])
-DYNAMODB_TABLE = DYNAMODB.Table(token=os.environ['AWS_DYNAMODB_TABLE'])
+DYNAMODB_TABLE = DYNAMODB.Table(os.environ['AWS_DYNAMODB_TABLE'])
 
-def lambda_handler():
+def lambda_handler(event, lambda_context):
     """Function called by lambda"""
+    main()
+
+def main():
+    """Main function, doing the job"""
     all_flux = get_all_flux(DYNAMODB_TABLE)
     for flux in all_flux:
         current_items = get_rss_entries(flux['fluxUrl'])
